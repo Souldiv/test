@@ -29,6 +29,12 @@ class ErrorHandler(tornado.web.ErrorHandler, IndexHandler):
 class test(tornado.web.RequestHandler):
     async def get(self):
         result = self.request.get_arguments()
+        if(result is None):
+            self.write(json.dumps({
+                'status_code': 140,
+                'status_message': 'in the none',
+                'kappa': None
+                }))
         print(result)
         self.write(json.dumps({ 'status_code': 200,
             'status_message': "works",
@@ -36,9 +42,16 @@ class test(tornado.web.RequestHandler):
             }
             ))
 
+    
     async def post(self):
         result = tornado.escape.json_decode(self.request.body)
         print(result)
+        if(result is None):
+            self.write(json.dumps({
+                'status_code': 140,
+                'status_message': 'in the none',
+                'kappa': None
+                }))
         self.write(json.dumps({
             'status_code': 200,
             'kappa': result,
@@ -59,4 +72,5 @@ if __name__ == "__main__":
     )
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(os.environ.get("PORT",options.port))
+    print("listening on port",8000)
     tornado.ioloop.IOLoop.instance().start()
